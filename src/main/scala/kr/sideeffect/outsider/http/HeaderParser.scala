@@ -2,14 +2,14 @@ package kr.sideeffect.outsider.http
 
 import scala.util.parsing.combinator._
 
-class MethodParser extends JavaTokenParsers {
+trait MethodParser extends JavaTokenParsers {
   def header : Parser[(String, String, String)] = method~host~protocol ^^ {case m~h~p => (m, h, p)}
   def method : Parser[String] = "OPTIONS" | "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "TRACE" | "CONNECT"
   def host : Parser[String] = """\/([\/\w_\.-]*)*\/?""".r
   def protocol : Parser[String] = "HTTP/1.0" | "HTTP/1.1"
 }
 
-class MessageParser extends JavaTokenParsers {
+trait MessageParser extends JavaTokenParsers {
   /*
    * message-header = field-name ":" [ field-value ]
    * field-name     = token
