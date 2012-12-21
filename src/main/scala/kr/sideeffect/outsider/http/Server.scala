@@ -1,7 +1,8 @@
 package kr.sideeffect.outsider.http
 
-object Httpd extends App {
+object Server extends App {
+  val defaultPath = "/Users/outsider/projects/scala/static-server/public"
+  val server = new StaticServer(defaultPath)
   println("server listening")
-  val server = new TCPServer(4000)
-  server start
+  server.listen(4000)
 }
