@@ -9,6 +9,8 @@ trait MethodParser extends JavaTokenParsers {
   def protocol : Parser[String] = "HTTP/1.0" | "HTTP/1.1"
 }
 
+object MethodParser extends MethodParser
+
 trait MessageParser extends JavaTokenParsers {
   /*
    * message-header = field-name ":" [ field-value ]
@@ -25,3 +27,5 @@ trait MessageParser extends JavaTokenParsers {
   def fieldValue : Parser[String] = """\([a-zA-Z0-9/\.\(\)\*\:\s;,_-]+?\)""".r | """[a-zA-Z0-9/\.\(\)\*\:\+\;=,_-]+""".r
   override val whiteSpace = "".r
 }
+
+object MessageParser extends MessageParser

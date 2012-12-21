@@ -113,7 +113,6 @@ class HeaderParserSuite extends FunSuite {
       val headers = messageParser.parseAll(messageParser.messageHeader, requestHeader).get
 
       // then
-      println(headers)
       assert(Set("Accept") == headers.keys)
       assert(Some(List("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")) == headers.get("Accept"))
     }
