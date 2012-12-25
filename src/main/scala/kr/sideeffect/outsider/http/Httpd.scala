@@ -36,46 +36,28 @@ class StaticServer(location: String) extends TCPServer {
 
     // handle OPTIONS
     if (req.method == "OPTIONS") {
-
-      //val response = "GET"
-      val response = List("HTTP/1.1 200 OK",
-        "Server: nginx/1.2.0",
-        "Date: Fri, 21 Dec 2012 19:26:19 GMT",
-        "Content-Type: text/html; charset=utf-8",
-        "Content-Length: 3",
-        "Allow: GET", "", "GET")
-      outputStream.write(response.mkString("\n").getBytes)
+      val headers = List("Content-Type: text/html; charset=utf-8",
+          "Content-Length: 0",
+          "Connection: close",
+          "Allow: GET")
+      
+      Ok.send(headers, outputStream, "GET".getBytes)
     } else if (req.method == "GET") {
       try {
         val reader = new FileReader(location + req.host)
-        val response = List("HTTP/1.1 200 OK",
-          "Server: nginx/1.2.0",
-          "Date: Fri, 21 Dec 2012 19:26:19 GMT",
-          "Content-Type: text/html; charset=utf-8",
+        
+        val headers = List("Content-Type: text/html; charset=utf-8",
           "Content-Length: 3183",
           "Vary: Accept-Encoding")
-        outputStream.write(response.mkString("\n").getBytes)
+          
+        //Ok.send(headers, outputStream, reader)
       } catch {
         case e: java.io.FileNotFoundException => {
-          val response = List("HTTP/1.1 404 Not Found",
-            "Server: nginx/1.2.0",
-            "Date: Fri, 21 Dec 2012 19:26:19 GMT",
-            "Content-Type: text/plain; charset=utf-8",
-            "Transfer-Encoding: chunked",
-            "Vary: Accept-Encoding")
-          outputStream.write(response.mkString("\n").getBytes)
+          NotFound.send(outputStream, null)
         }
       }
     } else {
-      val response = List("HTTP/1.1 405 Not Allowed",
-        "Server: nginx/1.2.0",
-        "Date: Fri, 21 Dec 2012 19:36:01 GMT",
-        "Content-Type: text/html; charset=utf-8",
-        "Content-Length: 158",
-        "Allow: GET",
-        "Connection: close", "",
-        "<html><head><title>405 Not Allowed</title></head><body bgcolor='white'><center><h1>405 Not Allowed</h1></center><hr><center>nginx/1.2.0</center></body></html>")
-
+      NotAllowed.send(outputStream, null)
     }
 
     outputStream.flush
